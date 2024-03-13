@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: color-grid-rollout
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: color-grid
+  template:
+    metadata:
+      labels:
+        app: color-grid
+    spec:
+      containers:
+      - name: color-grid
+        image: devops0919/color-grid:1.0
+        ports:
+        - containerPort: 8080
+  strategy:
+    canary:
+      steps:
+      - setWeight: 20
+      - pause: {}
+      analysis:
+        templates:
+        - templateName: success-rate-analysis
+        args:
+        - name: success-rate
+          value: "80"
