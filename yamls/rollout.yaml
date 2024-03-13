@@ -3,7 +3,7 @@ kind: Rollout
 metadata:
   name: color-grid-rollout
 spec:
-  replicas: 4
+  replicas: 5
   selector:
     matchLabels:
       app: color-grid
@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: color-grid
-        image: devops0819/color-grid:1.0
+        image: devops0819/color-grid
         ports:
         - containerPort: 8080
   strategy:
