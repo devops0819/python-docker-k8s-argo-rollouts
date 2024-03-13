@@ -9,7 +9,7 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     env:
-      DOCKER_IMAGE_NAME: color-grid:1.0 # Define your Docker image name here
+      DOCKER_IMAGE_NAME: color-grid # Define your Docker image name here
     steps:
     - name: Check out the repo
       uses: actions/checkout@v2
