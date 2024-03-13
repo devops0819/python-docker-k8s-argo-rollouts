@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Color Grid</title>
+    <style>
+        .color-box { width: 20px; height: 20px; display: inline-block; }
+    </style>
+</head>
+<body>
+    {% for color in colors %}
+    <div class="color-box" style="background-color: {{ color }}"></div>
+    {% endfor %}
+</body>
+</html>
