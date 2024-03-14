@@ -1,14 +1,35 @@
-apiVersion: v1
-kind: Service
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: argo-rollouts-dashboard
   namespace: argocd
 spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: argo-rollouts-dashboard
+  template:
+    metadata:
+      labels:
+        app: argo-rollouts-dashboard
+    spec:
+      containers:
+      - name: argo-rollouts-dashboard
+        image: argoproj/rollouts-dashboard:latest
+        ports:
+        - containerPort: 3100
+        args:
+        - --insecure
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: argo-rollouts-dashboard-service
+  namespace: argocd
+spec:
+  type: LoadBalancer
   ports:
   - port: 3100
     targetPort: 3100
-    protocol: TCP
-    name: http
   selector:
-    app: rollouts-dashboard
-  type: LoadBalancer
+    app: argo-rollouts-dashboard
