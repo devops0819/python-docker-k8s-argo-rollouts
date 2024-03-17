@@ -4,11 +4,11 @@ metadata:
   name: color-grid-service
   annotations:
     prometheus.io/scrape: 'true'
-    prometheus.io/port: '8080'
+    prometheus.io/port: '5000'
 spec:
   selector:
     app: color-grid
   ports:
     - protocol: TCP
-      port: 8080
-      targetPort: 8080
+      port: 5000
+      targetPort: 5000
