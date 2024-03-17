@@ -29,11 +29,11 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.run_number }}
     
     - name: Update Kubernetes manifest
       run: |
-        sed -i 's|container-image:.*|container-image: devops0819/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}|' ./yamls/rollout.yaml
+        sed -i 's|container-image:.*|container-image: devops0819/${{ env.DOCKER_IMAGE_NAME }}:${{ github.run_number }}|' ./yamls/rollout.yaml
       shell: bash
     
     - name: Commit changes
@@ -41,6 +41,6 @@ jobs:
       with:
         author_name: GitHub Actions
         author_email: actions@github.com
-        message: "Update image tag to ${{ github.sha }}"
+        message: "Update image tag to ${{ github.run_number }}"
         add: './yamls/rollout.yaml'
         
