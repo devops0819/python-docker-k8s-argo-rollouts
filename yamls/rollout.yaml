@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: color-grid
-        image: devops0819/color-grid:ea771339e2fa9bb2eccc033e5d80f2f4b5732cc3
+        image: devops0819/color-grid:18
         ports:
         - containerPort: 5000
   strategy:
