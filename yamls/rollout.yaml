@@ -28,14 +28,6 @@ spec:
           args:
           - name: success-rate
             value: "80"
-      - setWeight: 40
-      - pause: {duration: 1m}
-      - analysis:
-          templates:
-          - templateName: success-rate-analysis
-          args:
-          - name: success-rate
-            value: "80"
       - setWeight: 80
       - pause: {duration: 1m}
       - analysis:
