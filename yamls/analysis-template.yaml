@@ -8,6 +8,6 @@ spec:
     successCondition: "result >= 80"
     provider:
       prometheus:
-        address: http://prometheus-server.prometheus.svc.cluster.local:9090
+        address: http://prometheus-server.default.svc.cluster.local:9090
         query: |
           100 * (sum(rate(http_requests_total{job="color-grid",status!~"5.."}[1m])) / sum(rate(http_requests_total{job="color-grid"}[1m])))
