@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY . /app
 
-RUN pip install Flask
+RUN pip install -r requirements.txt
 
 EXPOSE 5000
 
