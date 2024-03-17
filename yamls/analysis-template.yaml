@@ -8,6 +8,6 @@ spec:
     successCondition: "result >= 80"
     provider:
       prometheus:
-        address: http://prometheus-server.default.svc.cluster.local:9090
+        address: http://prometheus-server.default.svc.cluster.local
         query: |
           100* sum(rate(flask_http_request_total{status="200"}[30m]))/sum(rate(flask_http_request_total[30m]))
