@@ -10,4 +10,4 @@ spec:
       prometheus:
         address: http://prometheus-server.default.svc.cluster.local:9090
         query: |
-          100 * (sum(rate(http_requests_total{job="color-grid",status!~"5.."}[1m])) / sum(rate(http_requests_total{job="color-grid"}[1m])))
+          100* sum(rate(flask_http_request_total{status="200"}[30m]))/sum(rate(flask_http_request_total[30m]))
