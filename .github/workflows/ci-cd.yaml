@@ -34,15 +34,21 @@ jobs:
       with:
           version: 'latest' # Ensure you're using the latest Helm version
 
-    - name: Install helm-s3 plugin
-      run: |
-          helm plugin install https://github.com/hypnoglow/helm-s3.git || true # The '|| true' ensures that if the plugin is already installed, the script doesn't fail.
-          
-    - name: Package Helm chart
-      run: helm package ./chart --version 0.1.0 --app-version ${{ github.sha }} -d ./
+    - name: Install Helm S3 Plugin
+      run: helm plugin install https://github.com/hypnoglow/helm-s3.git
 
-    - name: Add Helm S3 repository
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_DEFAULT_REGION }}
+
+    - name: Add S3 Helm repository
       run: helm repo add my-helm-charts s3://devops0819/charts/
+
+    - name: Update Helm repositories
+      run: helm repo update
 
     - name: Push Helm chart to S3 bucket
       run: helm s3 push color-grid-0.1.0.tgz my-helm-charts
