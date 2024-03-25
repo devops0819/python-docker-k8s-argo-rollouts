@@ -29,8 +29,10 @@ jobs:
         push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/color-grid:${{ github.sha }}
 
-    - name: Install Helm
-      run: curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+    - name: Set up Helm
+      uses: azure/setup-helm@v1
+      with:
+          version: 'latest' # Ensure you're using the latest Helm version
 
     - name: Install helm-s3 plugin
       run: |
