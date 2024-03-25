@@ -41,6 +41,14 @@ jobs:
       with:
         version: 'latest'
 
+    - name: Create Helm directories
+      run: |
+        mkdir -p ~/.helm/plugins
+        mkdir -p ~/.helm/repository
+        mkdir -p ~/.helm/cache
+        mkdir -p ~/.helm/starters
+        echo "HELM_HOME set to $HOME/.helm" >> $GITHUB_ENV
+
     - name: Configure Helm S3 Plugin
       run: |
         helm plugin install https://github.com/hypnoglow/helm-s3.git
