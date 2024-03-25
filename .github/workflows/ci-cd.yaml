@@ -32,9 +32,10 @@ jobs:
     - name: Install Helm
       run: curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 
-    - name: Install Helm S3 plugin
-      run: helm plugin install https://github.com/hypnoglow/helm-s3.git || true
-
+    - name: Install helm-s3 plugin
+      run: |
+          helm plugin install https://github.com/hypnoglow/helm-s3.git || true # The '|| true' ensures that if the plugin is already installed, the script doesn't fail.
+          
     - name: Package Helm chart
       run: helm package ./chart --version 0.1.0 --app-version ${{ github.sha }} -d ./
 
