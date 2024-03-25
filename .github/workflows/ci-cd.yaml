@@ -29,30 +29,22 @@ jobs:
         push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/color-grid:${{ github.sha }}
 
+    - name: Set up AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-south-1
+
     - name: Set up Helm
       uses: azure/setup-helm@v1
       with:
         version: 'latest'
 
-    - name: Define HELM_HOME
-      run: echo "HELM_HOME=$HOME/.helm" >> $GITHUB_ENV
-      shell: bash
-
-    - name: Install Helm S3 Plugin
+    - name: Configure Helm S3 Plugin
       run: |
-        mkdir -p $HELM_HOME/plugins
         helm plugin install https://github.com/hypnoglow/helm-s3.git
-      shell: bash
-
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ env.AWS_DEFAULT_REGION }}
-
-    - name: Add S3 Helm repository
-      run: helm repo add my-helm-charts s3://devops0819/charts/
+        helm repo add my-helm-charts s3://devops0819/charts/
 
     - name: Update Helm repositories
       run: helm repo update
