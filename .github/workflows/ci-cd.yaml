@@ -29,18 +29,17 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.run_number }}
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}
     
-    - name: Update Kubernetes manifest
+    - name: Push Docker image to Docker Hub
+      run: docker push  ${{ secrets.DOCKERHUB_USERNAME }}/color-grid:${{ github.sha }}
+      
+    - name: Install Helm
       run: |
-        sed -i 's|container-image:.*|container-image: devops0819/${{ env.DOCKER_IMAGE_NAME }}:${{ github.run_number }}|' ./yamls/rollout.yaml
-      shell: bash
-    
-    - name: Commit changes
-      uses: EndBug/add-and-commit@v7
-      with:
-        author_name: GitHub Actions
-        author_email: actions@github.com
-        message: "Update image tag to ${{ github.run_number }}"
-        add: './yamls/rollout.yaml'
+        curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+        chmod 700 get_helm.sh
+        ./get_helm.sh
         
+    - name: Update Helm Chart
+      run: |
+        helm upgrade --install color-grid ./helm/color-grid --namespace default --set image.tag=${{ github.sha }}
