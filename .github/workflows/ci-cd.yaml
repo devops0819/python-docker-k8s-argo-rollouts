@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - main
+env:
+  AWS_REGION: ap-south-1
+  CLUSTER_NAME: argo-dev
+  IMAGE_REPO: devops0819/color-grid
 
 jobs:
   build-and-push:
