@@ -112,3 +112,6 @@ jobs:
       run: |
           echo "Access the Prometheus dashboard at: http://${{ steps.prometheus-ip.outputs.PROMETHEUS_IP }}:9090"
           echo "Access the Application at: http://${{ steps.app-ip.outputs.APP_IP }}"
+    - name: Output Argo CD Rollouts Dashboard URL
+      run: |
+          echo "Access the Argo CD Rollouts dashboard by running 'kubectl argo rollouts dashboard' and visiting http://localhost:3100"
