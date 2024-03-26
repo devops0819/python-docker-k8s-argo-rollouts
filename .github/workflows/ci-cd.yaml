@@ -66,7 +66,13 @@ jobs:
         echo "$KUBE_CONFIG_DATA" | base64 -d > $HOME/.kube/config
         chmod 600 $HOME/.kube/config
         echo "Kubeconfig permissions adjusted."
+        export KUBECONFIG=$HOME/.kube/config
 
+    - name: Check Kubernetes Configuration
+      run: |
+        kubectl config view
+        kubectl cluster-info
+        kubectl get nodes
     - name: Deploy to Kubernetes
       run: |
         helm upgrade --install color-grid my-helm-charts/color-grid \
