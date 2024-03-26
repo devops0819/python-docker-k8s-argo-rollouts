@@ -93,13 +93,16 @@ jobs:
           --set image.repository=${{ secrets.DOCKERHUB_USERNAME }}/color-grid \
           --set image.tag=${{ github.sha }} \
           --namespace default
-      
+    - name: Deploy Application to Argo CD
+      run: |
+        kubectl apply -f color-grid-application.yaml -n argocd
+  
     - name: Get Prometheus External IP
       id: prometheus-ip
       run: |
-          PROMETHEUS_IP=$(kubectl get svc prometheus-server -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
-          echo "Prometheus External IP: $PROMETHEUS_IP"
-          echo "::set-output name=PROMETHEUS_IP::$PROMETHEUS_IP"
+        PROMETHEUS_IP=$(kubectl get svc prometheus-server -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+        echo "Prometheus External IP: $PROMETHEUS_IP"
+        echo "::set-output name=PROMETHEUS_IP::$PROMETHEUS_IP"
       
     - name: Get Application External IP
       id: app-ip
