@@ -51,7 +51,7 @@ jobs:
         run: helm plugin install https://github.com/hypnoglow/helm-s3.git || true
 
       - name: Add Helm repository
-        run: helm repo add my-helm-charts s3://<your-s3-bucket-name>/charts/ || true
+        run: helm repo add my-helm-charts s3://devops0819/charts/ || true
 
       - name: Deploy with Helm
         run: |
