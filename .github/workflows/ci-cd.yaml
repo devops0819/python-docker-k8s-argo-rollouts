@@ -92,7 +92,7 @@ jobs:
         helm upgrade --install color-grid my-helm-charts/color-grid \
           --set image.repository=${{ secrets.DOCKERHUB_USERNAME }}/color-grid \
           --set image.tag=${{ github.sha }} \
-          --namespace color-grid-helm
+          --namespace default
     
     - name: Checkout code
       uses: actions/checkout@v2
