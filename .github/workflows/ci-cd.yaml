@@ -39,12 +39,19 @@ jobs:
       - name: Set up Helm
         uses: azure/setup-helm@v1
 
-      - name: Install Helm S3 plugin
+      - name: Configure Helm directories and environment
         run: |
-          helm plugin install https://github.com/hypnoglow/helm-s3.git || true
+          mkdir -p ~/.helm/repository ~/.helm/plugins ~/.helm/starters ~/.helm/cache
+          echo "HELM_HOME=$HOME/.helm" >> $GITHUB_ENV
+          echo "XDG_CACHE_HOME=$HOME/.cache" >> $GITHUB_ENV
+          echo "XDG_CONFIG_HOME=$HOME/.config" >> $GITHUB_ENV
+          echo "XDG_DATA_HOME=$HOME/.local/share" >> $GITHUB_ENV
+
+      - name: Install Helm S3 plugin
+        run: helm plugin install https://github.com/hypnoglow/helm-s3.git || true
 
       - name: Add Helm repository
-        run: helm repo add my-helm-charts s3://devops0819/charts/ || true
+        run: helm repo add my-helm-charts s3://<your-s3-bucket-name>/charts/ || true
 
       - name: Deploy with Helm
         run: |
