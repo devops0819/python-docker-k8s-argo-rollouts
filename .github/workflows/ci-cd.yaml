@@ -94,9 +94,12 @@ jobs:
           --set image.tag=${{ github.sha }} \
           --namespace default
     
+    - name: List current directory contents
+      run: ls -la
+      
     - name: Deploy Application to Kubernetes
-      run: kubectl apply -f color-grid-application.yaml
-  
+      run: kubectl apply -f ${{ github.workspace }}/color-grid-application.yaml
+    
     - name: Get Prometheus External IP
       id: prometheus-ip
       run: |
