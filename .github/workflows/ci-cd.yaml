@@ -93,3 +93,22 @@ jobs:
           --set image.repository=${{ secrets.DOCKERHUB_USERNAME }}/color-grid \
           --set image.tag=${{ github.sha }} \
           --namespace default
+      
+    - name: Get Prometheus External IP
+      id: prometheus-ip
+      run: |
+          PROMETHEUS_IP=$(kubectl get svc prometheus-server -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+          echo "Prometheus External IP: $PROMETHEUS_IP"
+          echo "::set-output name=PROMETHEUS_IP::$PROMETHEUS_IP"
+      
+    - name: Get Application External IP
+      id: app-ip
+      run: |
+          APP_IP=$(kubectl get svc <YOUR-APPLICATION-SERVICE-NAME> -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+          echo "Application External IP: $APP_IP"
+          echo "::set-output name=APP_IP::$APP_IP"
+
+    - name: Output Access Information
+      run: |
+          echo "Access the Prometheus dashboard at: http://${{ steps.prometheus-ip.outputs.PROMETHEUS_IP }}:9090"
+          echo "Access the Application at: http://${{ steps.app-ip.outputs.APP_IP }}"
