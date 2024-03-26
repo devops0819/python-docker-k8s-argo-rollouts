@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "color-grid.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: 5
   selector:
     matchLabels:
       app: {{ include "color-grid.name" . }}
@@ -16,6 +16,9 @@ spec:
       - pause: {}
       - setWeight: 40
       - pause: {duration: 10}
+      - analysis:
+          templates:
+          - templateName: success-rate-analysis
   template:
     metadata:
       labels:
