@@ -1,1 +1,28 @@
-
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: {{ include "color-grid.fullname" . }}
+  labels:
+    {{- include "color-grid.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "color-grid.name" . }}
+  strategy:
+    canary:
+      steps:
+      - setWeight: 20
+      - pause: {}
+      - setWeight: 40
+      - pause: {duration: 10}
+  template:
+    metadata:
+      labels:
+        app: {{ include "color-grid.name" . }}
+    spec:
+      containers:
+      - name: color-grid
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        ports:
+        - containerPort: 80
