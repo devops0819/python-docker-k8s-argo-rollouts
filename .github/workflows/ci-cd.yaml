@@ -104,7 +104,7 @@ jobs:
     - name: Get Application External IP
       id: app-ip
       run: |
-          APP_IP=$(kubectl get svc <YOUR-APPLICATION-SERVICE-NAME> -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+          APP_IP=$(kubectl get svc  prometheus-server -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
           echo "Application External IP: $APP_IP"
           echo "::set-output name=APP_IP::$APP_IP"
 
