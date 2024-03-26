@@ -1,0 +1,13 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: color-grid
+spec:
+  project: default
+  source:
+    repoURL: 's3://devops0819/charts/'  # Your Helm chart repository
+    targetRevision: HEAD
+    chart: color-grid
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: default
