@@ -97,14 +97,14 @@ jobs:
     - name: Get Prometheus External IP
       id: prometheus-ip
       run: |
-          PROMETHEUS_IP=$(kubectl get svc prometheus-server -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+          PROMETHEUS_IP=$(kubectl get svc prometheus-server -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
           echo "Prometheus External IP: $PROMETHEUS_IP"
           echo "::set-output name=PROMETHEUS_IP::$PROMETHEUS_IP"
       
     - name: Get Application External IP
       id: app-ip
       run: |
-          APP_IP=$(kubectl get svc  prometheus-server -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+          APP_IP=$(kubectl get svc  prometheus-server -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
           echo "Application External IP: $APP_IP"
           echo "::set-output name=APP_IP::$APP_IP"
 
