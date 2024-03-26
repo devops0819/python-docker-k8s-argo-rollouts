@@ -93,9 +93,9 @@ jobs:
           --set image.repository=${{ secrets.DOCKERHUB_USERNAME }}/color-grid \
           --set image.tag=${{ github.sha }} \
           --namespace default
-    - name: Deploy Application to Argo CD
-      run: |
-        kubectl apply -f color-grid-application.yaml -n argocd
+    
+    - name: Deploy Application to Kubernetes
+      run: kubectl apply -f color-grid-application.yaml
   
     - name: Get Prometheus External IP
       id: prometheus-ip
