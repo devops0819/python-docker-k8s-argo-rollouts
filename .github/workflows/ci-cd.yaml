@@ -4,9 +4,10 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'helm/**' # Trigger only on changes within the helm directory
+
 env:
-  AWS_REGION: ap-south-1
-  CLUSTER_NAME: argo-dev
   IMAGE_REPO: devops0819/color-grid
 
 jobs:
@@ -31,101 +32,19 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/color-grid:${{ github.sha }}
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/color-grid:run-${{ github.run_number }}
 
-  deploy:
+  update-helm-chart:
     needs: build-and-push
     runs-on: ubuntu-latest
     steps:
-    # - name: Configure AWS Credentials
-    #   uses: aws-actions/configure-aws-credentials@v1
-    #   with:
-    #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-    #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    #     aws-region: ap-south-1
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-    # - name: Install Helm
-    #   run: |
-    #     curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
-    #     chmod 700 get_helm.sh
-    #     ./get_helm.sh
-
-    # - name: Add Helm S3 Plugin
-    #   run: |
-    #     helm plugin install https://github.com/hypnoglow/helm-s3.git
-
-    # - name: Add S3 Helm repository
-    #   run: |
-    #     helm repo add my-helm-charts s3://devops0819/charts/
-
-    # - name: Update Helm repositories
-    #   run: |
-    #     helm repo update
-
-    # - name: Set up Kubeconfig
-    #   env:
-    #     KUBE_CONFIG_DATA: ${{ secrets.KUBECONFIG_BASE64 }}
-    #   run: |
-    #     mkdir -p $HOME/.kube
-    #     echo "$KUBE_CONFIG_DATA" | base64 -d > $HOME/.kube/config
-    #     chmod 600 $HOME/.kube/config
-    #     echo "Kubeconfig permissions adjusted."
-    #     export KUBECONFIG=$HOME/.kube/config
-    # - name: Set up AWS CLI
-    #   uses: aws-actions/configure-aws-credentials@v1
-    #   with:
-    #       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-    #       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    #       aws-region: ${{ env.AWS_REGION }}
-
-    # - name: Update kubeconfig
-    #   run: |
-    #       aws eks update-kubeconfig --name ${{ env.CLUSTER_NAME }} --region ${{ env.AWS_REGION }}
-    
-    # - name: Check Kubernetes Configuration
-    #   run: |
-    #     kubectl config view
-    #     kubectl cluster-info
-    #     kubectl get nodes
-    # - name: Deploy to Kubernetes
-    #   run: |
-    #     helm upgrade --install color-grid my-helm-charts/color-grid \
-    #       --set image.repository=${{ secrets.DOCKERHUB_USERNAME }}/color-grid \
-    #       --set image.tag=${{ github.sha }} \
-    #       --namespace default
-    
-    # - name: Checkout code
-    #   uses: actions/checkout@v2
-    
-    # - name: List current directory contents
-    #   run: ls -la
-      
-    # - name: Deploy Application to Kubernetes
-    #   run: kubectl apply -f color-grid-application.yaml
-    
-    # - name: Get Prometheus External IP
-    #   id: prometheus-ip
-    #   run: |
-    #     PROMETHEUS_IP=$(kubectl get svc prometheus-server -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
-    #     echo "Prometheus External IP: $PROMETHEUS_IP"
-    #     echo "::set-output name=PROMETHEUS_IP::$PROMETHEUS_IP"
-      
-    # - name: Get Application External IP
-    #   id: app-ip
-    #   run: |
-    #       APP_IP=$(kubectl get svc  prometheus-server -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
-    #       echo "Application External IP: $APP_IP"
-    #       echo "::set-output name=APP_IP::$APP_IP"
-
-    # - name: Output Access Information
-    #   run: |
-    #       echo "Access the Prometheus dashboard at: http://${{ steps.prometheus-ip.outputs.PROMETHEUS_IP }}:9090"
-    #       echo "Access the Application at: http://${{ steps.app-ip.outputs.APP_IP }}"
-    # - name: Output Argo CD Rollouts Dashboard URL
-    #   run: |
-    #       echo "Access the Argo CD Rollouts dashboard by running 'kubectl argo rollouts dashboard' and visiting http://localhost:3100"
-
-
-    - name: Test
+    - name: Update Helm chart
       run: |
-          echo "Hello"
+        sed -i 's/tag: .*/tag: "run-${{ github.run_number }}"/' ./helm/values.yaml
+        git config --global user.name 'github-actions'
+        git config --global user.email 'github-actions@github.com'
+        git commit -am "Update image tag to run-${{ github.run_number }}"
+        git push
