@@ -6,8 +6,6 @@ on:
       - main
     paths:
       - 'chart/**'
-    branches-ignore:
-      - auto-update-branch # Exclude auto-update branch from triggering this workflow
 
 env:
   IMAGE_REPO: devops0819/color-grid
@@ -38,7 +36,7 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/color-grid:run-${{ github.run_number }}
 
-  update-helm-values:
+  update-helm-values-and-create-pr:
     needs: build-and-push
     runs-on: ubuntu-latest
     steps:
@@ -47,7 +45,18 @@ jobs:
         with:
           token: ${{ secrets.GH_PAT }}
           ref: main # Ensure starting from the main branch
-          
+
+      - name: Check for changes in the chart directory (Prevent loop)
+        id: git-diff
+        run: |
+          git diff --exit-code ./chart/ || echo "::set-output name=changes_detected::true"
+
+      - name: Exit if no changes detected in the chart directory
+        if: steps.git-diff.outputs.changes_detected != 'true'
+        run: |
+          echo "No changes in the 'chart/' directory. Skipping the rest of the job."
+          exit 0
+
       - name: Create a new branch
         run: |
           git checkout -b auto-update-branch
