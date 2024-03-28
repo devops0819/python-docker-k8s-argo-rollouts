@@ -3,7 +3,7 @@ name: Publish Helm Chart
 on:
   push:
     branches:
-      - main    # Adjust this if you use a different branch for production
+      - mainX   # Adjust this if you use a different branch for production
     paths:
       - 'chart/**'  # Trigger the workflow on changes to the chart directory
 
