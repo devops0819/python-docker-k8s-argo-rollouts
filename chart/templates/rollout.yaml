@@ -3,9 +3,9 @@ kind: Rollout
 metadata:
   name: {{ include "color-grid.fullname" . }}
   labels:
-    {{- include "color-grid.labels" . | nindent 4 }}
+    {{ include "color-grid.labels" . | nindent 4 }}
 spec:
-  replicas: "{{ .Values.replicaCount }}"
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       app: {{ include "color-grid.name" . }}
@@ -13,7 +13,8 @@ spec:
     canary:
       steps:
       - setWeight: 20
-      - pause: {duration: 1m}
+      - pause:
+          duration: 1m
       - analysis:
           templates:
           - templateName: success-rate-analysis
@@ -21,7 +22,8 @@ spec:
           - name: success-rate
             value: "80"
       - setWeight: 80
-      - pause: {duration: 1m}
+      - pause:
+          duration: 1m
       - analysis:
           templates:
           - templateName: success-rate-analysis
