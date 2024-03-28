@@ -4,7 +4,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "color-helm.name" -}}
+{{- define "color-grid.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
@@ -12,7 +12,7 @@ Expand the name of the chart.
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
-{{- define "color-helm.fullname" -}}
+{{- define "color-grid.fullname" -}}
 {{- if .Values.fullnameOverride -}}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
@@ -24,9 +24,9 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{/*
 Generate basic labels
 */}}
-{{- define "color-helm.labels" -}}
-helm.sh/chart: {{ include "color-helm.chart" . }}
-app.kubernetes.io/name: {{ include "color-helm.name" . }}
+{{- define "color-grid.labels" -}}
+helm.sh/chart: {{ include "color-grid.chart" . }}
+app.kubernetes.io/name: {{ include "color-grid.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion }}
@@ -37,7 +37,7 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "color-helm.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "color-helm.name" . }}
+{{- define "color-grid.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "color-grid.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
