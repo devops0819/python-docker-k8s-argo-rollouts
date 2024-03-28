@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'helm/**' # Trigger only on changes within the helm directory
+      - 'chart/**' # Trigger only on changes within the helm directory
 
 env:
   IMAGE_REPO: devops0819/color-grid
