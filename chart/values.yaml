@@ -8,7 +8,7 @@ image:
   repository: devops0819/color-grid
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "latest" # This will be updated dynamically by GitHub Actions.
+  tag: "run-129"
 
 imagePullSecrets: []
 nameOverride: ""
