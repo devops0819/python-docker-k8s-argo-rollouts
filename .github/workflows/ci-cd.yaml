@@ -43,7 +43,7 @@ jobs:
 
     - name: Update Helm chart
       run: |
-        sed -i 's/tag: .*/tag: "run-${{ github.run_number }}"/' ./helm/values.yaml
+        sed -i 's/tag: .*/tag: "run-${{ github.run_number }}"/' ./chart/values.yaml
         git config --global user.name 'github-actions'
         git config --global user.email 'github-actions@github.com'
         git commit -am "Update image tag to run-${{ github.run_number }}"
