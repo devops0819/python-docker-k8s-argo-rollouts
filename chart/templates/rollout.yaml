@@ -41,11 +41,4 @@ spec:
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         ports:
         - containerPort: 5000
-        # livenessProbe:
-        #   httpGet:
-        #     path: /
-        #     port: 5000
-        # readinessProbe:
-        #   httpGet:
-        #     path: /
-        #     port: 5000
+        
