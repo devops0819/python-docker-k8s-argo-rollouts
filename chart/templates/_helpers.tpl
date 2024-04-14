@@ -1,15 +1,14 @@
 {{/* vim: set filetype=mustache: */}}
 
 {{- define "color-grid.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
+{{ default "color-grid" .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end -}}
 
 {{- define "color-grid.fullname" -}}
-{{- if .Values.fullnameOverride -}}
-{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-{{- $name := default .Chart.Name .Values.nameOverride -}}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
+{{ if .Values.fullnameOverride }}
+{{ .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
+{{- else }}
+{{- printf "color-grid" | trunc 63 | trimSuffix "-" }}
 {{- end -}}
 {{- end -}}
 
