@@ -32,27 +32,42 @@ jobs:
           push: true
           tags: ${{ env.IMAGE_REPO }}:run-${{ github.run_number }}
 
-  update-image-tag:
-    runs-on: ubuntu-latest
+  update-k8s-rollout-and-create-pr:
     needs: build-and-push
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
         with:
           token: ${{ secrets.GH_PAT }}
+          fetch-depth: 0
 
-      - name: Update image tag in Rollout manifest
+      - name: Setup Git
         run: |
-          sed -i "s|image: ${IMAGE_REPO}:.*|image: ${IMAGE_REPO}:run-${{ github.run_number }}|" ./chart/templates/rollout.yaml
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
-          git add ./chart/templates/rollout.yaml
-          git status
-          if git diff-index --quiet HEAD --; then
-            echo "No changes to commit."
-          else
-            git commit -m "Update image tag to run-${{ github.run_number }}"
-            git push --force-with-lease origin main
-        env:
-          IMAGE_REPO: ${{ env.IMAGE_REPO }}
 
+      - name: Checkout or update the auto-update-branch
+        run: |
+          git fetch --all
+          if git branch --list --remote | grep -q "origin/auto-update-branch"; then
+            git checkout auto-update-branch
+          else
+            git checkout -b auto-update-branch
+          fi
+
+      - name: Update image in Rollout YAML
+        run: |
+          sed -i "s|image: ${IMAGE_REPO}:.*|image: ${IMAGE_REPO}:run-${{ github.run_number }}|" ./chart/rollout.yaml
+          git add ./chart/rollout.yaml
+          git commit -m "Update image tag to run-${{ github.run_number }}" || echo "No changes to commit."
+          git push --force-with-lease origin auto-update-branch
+
+      - name: Create or update Pull Request
+        uses: repo-sync/pull-request@v2
+        with:
+          github_token: ${{ secrets.GH_PAT }}
+          pr_title: "Auto-update image tag to run-${{ github.run_number }}"
+          pr_body: "This is an automated pull request to update the image tag in Kubernetes Rollout."
+          destination_branch: "main"
+          source_branch: "auto-update-branch"
