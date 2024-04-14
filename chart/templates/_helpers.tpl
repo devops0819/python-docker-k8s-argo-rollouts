@@ -1,17 +1,27 @@
 {{/* vim: set filetype=mustache: */}}
 
+{{/*
+Expand the name of the chart.
+*/}}
 {{- define "color-grid.name" -}}
-{{ default "color-grid" .Values.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
+{{/*
+Create a default fully qualified app name.
+We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+*/}}
 {{- define "color-grid.fullname" -}}
-{{ if .Values.fullnameOverride }}
-{{ .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- printf "color-grid" | trunc 63 | trimSuffix "-" }}
+{{- if .Values.fullnameOverride -}}
+{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- printf "%s-%s" .Release.Name (include "color-grid.name" .) | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 {{- end -}}
 
+{{/*
+Generate basic labels
+*/}}
 {{- define "color-grid.labels" -}}
 helm.sh/chart: {{ printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 app.kubernetes.io/name: {{ include "color-grid.name" . }}
