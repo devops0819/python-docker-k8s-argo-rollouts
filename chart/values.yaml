@@ -5,7 +5,7 @@
 nameOverride: "color-grid"
 fullnameOverride: "color-grid"
 
-replicaCount: 5
+replicaCount: 6
 
 image:
   repository: devops0819/color-grid
