@@ -2,7 +2,9 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-name: "color-grid"
+nameOverride: "color-grid"
+fullnameOverride: "color-grid"
+
 replicaCount: 5
 
 image:
@@ -12,9 +14,6 @@ image:
   tag: "run-170"
 
 imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
-
 serviceAccount:
   create: true
   automount: true
@@ -25,7 +24,6 @@ podAnnotations: {}
 podLabels: {}
 
 podSecurityContext: {}
-
 securityContext: {}
 
 service:
@@ -34,7 +32,7 @@ service:
   targetPort: 5000
   nodePort: 30009
   protocol: TCP
-  
+
 ingress:
   enabled: false
   className: ""
@@ -55,11 +53,8 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
 
 volumes: []
-
 volumeMounts: []
 
 nodeSelector: {}
-
 tolerations: []
-
 affinity: {}
