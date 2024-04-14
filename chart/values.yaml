@@ -62,9 +62,9 @@ jobs:
 
       - name: Update image in Rollout YAML
         run: |
-          if [ -f "./chart/rollout.yaml" ]; then
-            sed -i "s|image: ${IMAGE_REPO}:.*|image: ${IMAGE_REPO}:run-${{ github.run_number }}|" ./chart/rollout.yaml
-            git add ./chart/rollout.yaml
+          if [ -f "./chart/templates/rollout.yaml" ]; then
+            sed -i "s|image: ${IMAGE_REPO}:.*|image: ${IMAGE_REPO}:run-${{ github.run_number }}|" ./chart/templates/rollout.yaml
+            git add ./chart/templates/rollout.yaml
             git commit -m "Update image tag to run-${{ github.run_number }}" || echo "No changes to commit."
             git push --force-with-lease origin auto-update-branch
           else
