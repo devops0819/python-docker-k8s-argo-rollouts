@@ -5,13 +5,12 @@ metadata:
   labels:
     {{- include "color-grid.labels" . | nindent 4 }}
 spec:
-  type: NodePort
+  type: {{ .Values.service.type }}
   ports:
-    - port: 5000
-      targetPort: 5000
-      protocol: TCP
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
+      protocol: {{ .Values.service.protocol }}
       name: http
   selector:
     app.kubernetes.io/name: {{ include "color-grid.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
-    
