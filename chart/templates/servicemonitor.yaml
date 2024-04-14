@@ -7,10 +7,10 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: {{ include "color-grid.name" . }}
+      app.kubernetes.io/name: {{ include "color-grid.name" . }}
   namespaceSelector:
     matchNames:
-    - {{ .Release.Namespace }}
+    - default  # Ensure this matches the namespace where your application is deployed
   endpoints:
-  - port: http
+  - port: http  # Ensure this matches the port name defined in your service
     interval: 30s
