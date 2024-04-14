@@ -17,6 +17,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           token: ${{ secrets.GH_PAT }}
+          fetch-depth: 0  # Fetch all history for all branches and tags
 
       - uses: docker/setup-buildx-action@v1
 
@@ -40,7 +41,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           token: ${{ secrets.GH_PAT }}
-          fetch-depth: 0
+          fetch-depth: 1  # Fetch only the latest commits to speed up the checkout
 
       - name: Setup Git
         run: |
@@ -67,10 +68,9 @@ jobs:
             git add ./chart/values.yaml
             git commit -m "Update image tag to run-${{ github.run_number }}"
             git push --force-with-lease origin auto-update-branch
-          fi
 
       - name: Create Pull Request
-        if: ${{ success() && steps.commit-and-push.outcome != 'skipped' }}
+        if: ${{ success() && steps.update-helm-values-and-create-pr.outcome != 'skipped' }}
         uses: repo-sync/pull-request@v2
         with:
           github_token: ${{ secrets.GH_PAT }}
