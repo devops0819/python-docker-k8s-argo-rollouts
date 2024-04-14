@@ -55,7 +55,11 @@ jobs:
       - name: Rebase onto main
         run: |
           git fetch origin main
-          git rebase origin/main
+          git rebase origin/main || {
+            echo "Rebase encountered conflicts."
+            git rebase --abort
+            exit 1
+          }
 
       - name: Update values.yaml with new image tag
         run: |
@@ -67,7 +71,6 @@ jobs:
             git add ./chart/values.yaml
             git commit -m "Update image tag to run-${{ github.run_number }}"
             git push --force-with-lease origin auto-update-branch
-          fi
 
       - name: Create Pull Request
         if: ${{ success() && steps.commit-and-push.outcome != 'skipped' }}
