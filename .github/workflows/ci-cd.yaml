@@ -55,19 +55,21 @@ jobs:
             git checkout -b auto-update-branch
           fi
 
-      - name: Update rollout.yaml with new image tag
+      - name: Update values.yaml with new image tag
         run: |
-          sed -i "s|image: ${IMAGE_REPO}:.*|image: ${IMAGE_REPO}:run-${{ github.run_number }}|" ./chart/templates/rollout.yaml
-          git add ./chart/templates/rollout.yaml
-          if git diff-index --quiet HEAD --; then
-            echo "No changes to commit."
-          else
-            git commit -m "Update image tag to run-${{ github.run_number }}"
-            git push --force-with-lease origin auto-update-branch
-          fi
-          shell: /usr/bin/bash -e
-        env:
-          IMAGE_REPO: ${{ env.IMAGE_REPO }}
+          sed -i "s/tag: .*/tag: 'run-${{ github.run_number }}'/" ./chart/values.yaml
+          git add ./chart/values.yaml
+          git commit -m "Update image tag to run-${{ github.run_number }}"
+          git push --force-with-lease origin auto-update-branch
+
+      - name: Create or update Pull Request
+        uses: repo-sync/pull-request@v2
+        with:
+          github_token: ${{ secrets.GH_PAT }}
+          pr_title: "Auto-update image tag to run-${{ github.run_number }}"
+          pr_body: "This is an automated pull request to update the image tag."
+          destination_branch: "main"
+          source_branch: "auto-update-branch"
 
       - name: Create or update Pull Request
         uses: repo-sync/pull-request@v2
