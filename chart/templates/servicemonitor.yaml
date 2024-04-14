@@ -8,9 +8,10 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "color-grid.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
   namespaceSelector:
     matchNames:
-    - default  # Ensure this matches the namespace where your application is deployed
+      - default  # Ensure this is the namespace where your service resides
   endpoints:
-  - port: http  # Ensure this matches the port name defined in your service
+  - port: http  # This should match the port name in your service
     interval: 30s
