@@ -49,7 +49,7 @@ jobs:
 
       - name: Update Kubernetes manifests with new image tag
         run: |
-          sed -i "s|image: ${IMAGE_REPO}:.*|image: ${IMAGE_REPO}:run-${{ github.run_number }}|" ./chart/templates/*Rollout.yaml
+          sed -i "s|image: ${IMAGE_REPO}:.*|image: ${IMAGE_REPO}:run-${{ github.run_number }}|" ./chart/templates/*rollout.yaml
           git add ./chart/templates/*
           git commit -m "Update image tag to run-${{ github.run_number }}"
           git push --force-with-lease origin main
