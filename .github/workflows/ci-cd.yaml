@@ -65,7 +65,7 @@ jobs:
             git commit -m "Update image tag to run-${{ github.run_number }}"
             git push --force-with-lease origin auto-update-branch
           fi
-        shell: /usr/bin/bash -e
+          shell: /usr/bin/bash -e
         env:
           IMAGE_REPO: ${{ env.IMAGE_REPO }}
 
