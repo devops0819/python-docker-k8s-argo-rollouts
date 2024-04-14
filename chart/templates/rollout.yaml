@@ -3,12 +3,15 @@ kind: Rollout
 metadata:
   name: {{ include "color-grid.fullname" . | quote }}
   labels:
+    app.kubernetes.io/name: {{ include "color-grid.name" . | quote }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
     {{- include "color-grid.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ include "color-grid.name" . | quote }}
+      app.kubernetes.io/name: {{ include "color-grid.name" . | quote }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
   strategy:
     canary:
       steps:
@@ -34,7 +37,8 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ include "color-grid.name" . | quote }}
+        app.kubernetes.io/name: {{ include "color-grid.name" . | quote }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
         rollout-restart-hash: "{{ randAlphaNum 5 }}"
     spec:
       containers:
