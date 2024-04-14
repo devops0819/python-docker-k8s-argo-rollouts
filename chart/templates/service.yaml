@@ -7,10 +7,10 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-  - name: http
-    port: {{ .Values.service.port }}
-    targetPort: {{ .Values.service.targetPort }}
-    protocol: {{ .Values.service.protocol }}
+    - name: http
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
+      protocol: {{ .Values.service.protocol }}
   selector:
     app.kubernetes.io/name: {{ include "color-grid.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
