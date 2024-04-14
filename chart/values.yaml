@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - 'chart/**'
-
+      
 env:
   IMAGE_REPO: devops0819/color-grid
 
@@ -58,3 +58,4 @@ jobs:
           git push --force-with-lease origin main
         env:
           IMAGE_REPO: ${{ env.IMAGE_REPO }}
+
