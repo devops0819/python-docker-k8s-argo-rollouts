@@ -30,7 +30,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ env.IMAGE_REPO }}/color-grid:run-${{ github.run_number }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/color-grid:run-${{ github.run_number }}
 
   update-helm-values-and-create-pr:
     needs: build-and-push
@@ -69,6 +69,7 @@ jobs:
             git push --force-with-lease origin auto-update-branch
 
       - name: Create Pull Request
+        # if: ${{ success() && steps.commit-and-push.outcome != 'skipped' }}
         if: success() && env.GITHUB_EVENT_NAME == 'push'
         uses: repo-sync/pull-request@v2
         with:
