@@ -35,6 +35,7 @@ spec:
     metadata:
       labels:
         app: {{ include "color-grid.name" . }}
+      rollout-restart-hash: "{{ randAlphaNum 5 | quote }}"
     spec:
       containers:
       - name: color-grid
