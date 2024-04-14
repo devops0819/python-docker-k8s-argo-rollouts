@@ -1,14 +1,14 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Rollout
 metadata:
-  name: {{ include "color-grid.fullname" . }}
+  name: {{ include "color-grid.fullname" . | quote }}
   labels:
-    {{ include "color-grid.labels" . | nindent 4 }}
+    {{- include "color-grid.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.replicaCount | quote }}
   selector:
     matchLabels:
-      app: {{ include "color-grid.name" . }}
+      app: {{ include "color-grid.name" . | quote }}
   strategy:
     canary:
       steps:
@@ -34,8 +34,8 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ include "color-grid.name" . }}
-      rollout-restart-hash: "{{ randAlphaNum 5 | quote }}"
+        app: {{ include "color-grid.name" . | quote }}
+        rollout-restart-hash: "{{ randAlphaNum 5 }}"
     spec:
       containers:
       - name: color-grid
