@@ -28,10 +28,11 @@ podSecurityContext: {}
 securityContext: {}
 
 service:
-  type: LoadBalancer
+  type: NodePort
   port: 5000
   targetPort: 5000
-
+  nodePort: 30009
+  
 ingress:
   enabled: false
   className: ""
