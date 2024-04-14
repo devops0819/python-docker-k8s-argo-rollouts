@@ -32,7 +32,7 @@ jobs:
           push: true
           tags: ${{ env.IMAGE_REPO }}:run-${{ github.run_number }}
 
-  update-helm-values-and-create-pr:
+  update-manifests-and-create-pr:
     needs: build-and-push
     runs-on: ubuntu-latest
     steps:
@@ -47,21 +47,12 @@ jobs:
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
 
-      - name: Checkout or update the auto-update-branch
+      - name: Update Kubernetes manifests with new image tag
         run: |
-          git fetch --all
-          if git branch --list --remote | grep -q "origin/auto-update-branch"; then
-            git checkout auto-update-branch
-          else
-            git checkout -b auto-update-branch
-          fi
-
-      - name: Update values.yaml with new image tag
-        run: |
-          sed -i "s/tag: .*/tag: 'run-${{ github.run_number }}'/" ./chart/values.yaml
-          git add ./chart/values.yaml
+          sed -i "s|image: ${IMAGE_REPO}:.*|image: ${IMAGE_REPO}:run-${{ github.run_number }}|" ./chart/templates/*Rollout.yaml
+          git add ./chart/templates/*
           git commit -m "Update image tag to run-${{ github.run_number }}"
-          git push --force-with-lease origin auto-update-branch
+          git push --force-with-lease origin main
 
       - name: Create or update Pull Request
         uses: repo-sync/pull-request@v2
@@ -70,4 +61,29 @@ jobs:
           pr_title: "Auto-update image tag to run-${{ github.run_number }}"
           pr_body: "This is an automated pull request to update the image tag."
           destination_branch: "main"
-          source_branch: "auto-update-branch"
+          source_branch: "main"
+
+  traffic-generation-and-checks:
+    needs: update-manifests-and-create-pr
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests  # Assuming you are using requests library in your script
+
+      - name: Run traffic generator script
+        run: |
+          python traffic_generator.py
+
+      - name: Check Rollout status
+        run: |
+          kubectl argo rollouts status rollouts-name -n namespace --watch
