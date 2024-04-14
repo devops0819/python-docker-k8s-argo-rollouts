@@ -32,6 +32,7 @@ service:
   port: 5000
   targetPort: 5000
   nodePort: 30009
+  protocol: TCP
   
 ingress:
   enabled: false
