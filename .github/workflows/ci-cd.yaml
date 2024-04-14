@@ -52,10 +52,10 @@ jobs:
           git fetch origin auto-update-branch:auto-update-branch || git branch auto-update-branch
           git checkout auto-update-branch
 
-      - name: Merge main into auto-update branch
+      - name: Rebase onto main
         run: |
           git fetch origin main
-          git merge origin/main --no-edit || (git merge --abort && exit 1)
+          git rebase origin/main
 
       - name: Update values.yaml with new image tag
         run: |
@@ -67,10 +67,10 @@ jobs:
             git add ./chart/values.yaml
             git commit -m "Update image tag to run-${{ github.run_number }}"
             git push --force-with-lease origin auto-update-branch
+          fi
 
       - name: Create Pull Request
-        # if: ${{ success() && steps.commit-and-push.outcome != 'skipped' }}
-        if: success() && env.GITHUB_EVENT_NAME == 'push'
+        if: ${{ success() && steps.commit-and-push.outcome != 'skipped' }}
         uses: repo-sync/pull-request@v2
         with:
           github_token: ${{ secrets.GH_PAT }}
