@@ -58,23 +58,3 @@ volumeMounts: []
 nodeSelector: {}
 tolerations: []
 affinity: {}
-
-servicemonitor.yaml
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
-metadata:
-  name: {{ include "color-grid.fullname" . }}
-  labels:
-    {{- include "color-grid.labels" . | nindent 4 }}
-    release: prometheus-operator
-spec:
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: {{ include "color-grid.name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
-  namespaceSelector:
-    matchNames:
-      - default  # Ensure this is the namespace where your service resides
-  endpoints:
-  - port: http  # This should match the port name in your service
-    interval: 30s
