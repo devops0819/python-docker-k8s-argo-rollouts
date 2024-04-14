@@ -4,6 +4,7 @@ metadata:
   name: {{ include "color-grid.fullname" . }}
   labels:
     {{- include "color-grid.labels" . | nindent 4 }}
+    release: prometheus-operator
 spec:
   selector:
     matchLabels:
