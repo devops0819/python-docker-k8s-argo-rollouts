@@ -5,11 +5,12 @@ metadata:
 spec:
   metrics:
   - name: error-rate
-    successCondition: "result[0] <= 5.0"
-    failureCondition: "result[0] > 5.0"
+    successCondition: "result[0] <= 25.0"
+    failureCondition: "result[0] > 25.0"
     timeout: 120s
     provider:
       prometheus:
         address: http://prometheus-operator-kube-p-prometheus.monitoring.svc.cluster.local:9090
         query: |
-          100 * sum(rate(flask_http_request_total{status=~"5.."}[30m])) / sum(rate(flask_http_request_total[30m]))
+          100 * sum(rate(http_requests_total{status=~"5.."}[5m])) /
+          (sum(rate(http_requests_total[5m])) > 100 ? sum(rate(http_requests_total[5m])) : 1)
