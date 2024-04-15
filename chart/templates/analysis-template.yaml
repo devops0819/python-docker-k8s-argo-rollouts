@@ -10,7 +10,7 @@ spec:
     timeout: 120s
     provider:
       prometheus:
-        address: http://prometheus-operator-kube-p-prometheus.monitoring.svc.cluster.local
+        address: http://prometheus-operator-kube-p-prometheus.monitoring.svc.cluster.local:9090
         query: |
           100 * sum(rate(flask_http_request_total{status="200"}[30m]))
           /
