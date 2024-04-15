@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: response-latency-analysis
+spec:
+  metrics:
+  - name: response-latency
+    successCondition: "result[0] <= 500"
+    failureCondition: "result[0] > 500"
+    timeout: 120s
+    provider:
+      prometheus:
+        address: http://prometheus-operator-kube-p-prometheus.monitoring.svc.cluster.local:9090
+        query: |
+          histogram_quantile(0.95, sum(rate(flask_http_request_duration_seconds_bucket[30m])) by (le))
