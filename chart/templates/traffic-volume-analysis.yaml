@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: traffic-volume-analysis
+spec:
+  metrics:
+  - name: traffic-volume
+    successCondition: "result[0] >= 1000"
+    failureCondition: "result[0] < 1000"
+    timeout: 120s
+    provider:
+      prometheus:
+        address: http://prometheus-operator-kube-p-prometheus.monitoring.svc.cluster.local:9090
+        query: |
+          sum(rate(flask_http_request_total[30m]))
