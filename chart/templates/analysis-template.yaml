@@ -7,7 +7,7 @@ spec:
   - name: success-rate
     successCondition: "result[0] != 'NaN' and result[0] >= 90.0"
     failureCondition: "result[0] == 'NaN' or result[0] < 90.0"
-    timeout: 60s
+    timeout: 120s
     provider:
       prometheus:
         address: http://prometheus-operator-kube-p-prometheus.monitoring.svc.cluster.local
