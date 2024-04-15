@@ -21,18 +21,21 @@ spec:
       - analysis:
           templates:
           - templateName: success-rate-analysis
-          args:
-          - name: success-rate
-            value: "80"
+          - templateName: error-rate-analysis
+      - setWeight: 50
+      - pause:
+          duration: 1m
+      - analysis:
+          templates:
+          - templateName: response-latency-analysis
+          - templateName: traffic-volume-analysis
       - setWeight: 80
       - pause:
           duration: 1m
       - analysis:
           templates:
           - templateName: success-rate-analysis
-          args:
-          - name: success-rate
-            value: "80"
+          - templateName: error-rate-analysis
       - setWeight: 100
   template:
     metadata:
@@ -46,3 +49,4 @@ spec:
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         ports:
         - containerPort: 5000
+    
