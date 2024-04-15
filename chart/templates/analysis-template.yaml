@@ -12,11 +12,4 @@ spec:
       prometheus:
         address: http://prometheus-operator-kube-p-prometheus.monitoring.svc.cluster.local:9090
         query: |
-          100 * sum(rate(flask_http_request_total{status="200"}[30m]))
-          /
-          (
-            sum(rate(flask_http_request_total[30m])) > 0 
-            ? sum(rate(flask_http_request_total[30m]))
-            : NaN
-          )
-          
+          100 * sum(rate(flask_http_request_total{status="200"}[30m])) / sum(rate(flask_http_request_total[30m])) or vector(0)
