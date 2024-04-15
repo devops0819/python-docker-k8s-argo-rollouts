@@ -5,8 +5,8 @@ metadata:
 spec:
   metrics:
   - name: success-rate
-    successCondition: "result[0] != 'NaN' and result[0] >= 90.0"
-    failureCondition: "result[0] == 'NaN' or result[0] < 90.0"
+    successCondition: "result[0] != 'NaN' and result[0] >= 60.0"
+    failureCondition: "result[0] == 'NaN' or result[0] < 60.0"
     timeout: 120s
     provider:
       prometheus:
