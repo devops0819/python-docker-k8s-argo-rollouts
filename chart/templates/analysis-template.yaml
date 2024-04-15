@@ -6,6 +6,7 @@ spec:
   metrics:
   - name: success-rate
     successCondition: "result[0] >= 90.0"
+    timeout: 60s
     provider:
       prometheus:
         # address: http://prometheus-server.default.svc.cluster.local
