@@ -10,7 +10,7 @@ spec:
     successCondition: "result[0] > 0.9" # 90% tests should pass
     provider:
       prometheus:
-        address: http://prometheus-server.your-namespace.svc.cluster.local  # Update with your actual Prometheus server address
+        address: http://prometheus-operator-kube-p-prometheus.monitoring.svc.cluster.local:9090
         query: |
           # Assuming there's a Prometheus metric that records the success rate of integration tests
           integration_test_success_rate{app="color-grid"}
