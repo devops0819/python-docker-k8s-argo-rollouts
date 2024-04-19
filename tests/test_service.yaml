@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: python-test-metrics
+  namespace: monitoring
+spec:
+  selector:
+    app: python-test  # Ensure this matches the label of your test pods
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+      
