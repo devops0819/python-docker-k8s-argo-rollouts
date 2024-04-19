@@ -1,0 +1,16 @@
+# helm/templates/integration-test-analysis.yaml
+
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: integration-test-results
+spec:
+  metrics:
+  - name: integration-test-success-rate
+    successCondition: "result[0] > 0.9" # 90% tests should pass
+    provider:
+      prometheus:
+        address: http://prometheus-server.your-namespace.svc.cluster.local  # Update with your actual Prometheus server address
+        query: |
+          # Assuming there's a Prometheus metric that records the success rate of integration tests
+          integration_test_success_rate{app="color-grid"}
