@@ -1,0 +1,20 @@
+# helm/templates/test-runner.yaml
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "color-grid.fullname" . }}-test-runner
+  labels:
+    {{- include "color-grid.labels" . | nindent 4 }}
+spec:
+  template:
+    metadata:
+      labels:
+        {{- include "color-grid.labels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: test-runner
+        image: "{{ .Values.testImage.repository }}:{{ .Values.testImage.tag }}"
+        imagePullPolicy: Always
+      restartPolicy: Never
+  backoffLimit: 0
