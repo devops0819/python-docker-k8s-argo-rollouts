@@ -72,21 +72,11 @@ jobs:
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
 
-      - name: Checkout or update the auto-update-branch
-        run: |
-          git fetch --all
-          if git branch --list --remote | grep -q "origin/auto-update-branch"; then
-            git checkout auto-update-branch
-          else
-            git checkout -b auto-update-branch
-          fi
-
       - name: Update values.yaml with new image tags
         run: |
-          sed -i "s/appImage.tag: .*/appImage.tag: 'run-${{ github.run_number }}'/" ./chart/values.yaml
-          sed -i "s/testImage.tag: .*/testImage.tag: 'run-${{ github.run_number }}'/" ./chart/values.yaml
-          git add ./chart/values.yaml          
-          git commit -m "Update image tags to run-${{ github.run_number }}"
+          sed -i "s/tag: .*/tag: 'run-${{ github.run_number }}'/" ./chart/values.yaml
+          git add ./chart/values.yaml
+          git commit -m "Update image tag to run-${{ github.run_number }}"
           git push --force-with-lease origin auto-update-branch
 
       - name: Create or update Pull Request
