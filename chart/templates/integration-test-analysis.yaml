@@ -5,7 +5,8 @@ metadata:
 spec:
   metrics:
   - name: integration-test-success-rate
-    successCondition: "len(result) > 0 and result[0] > 0.9"  # Ensures result is not empty and 90% tests should pass
+    successCondition: "result >= 0.95"  # Adjust the condition based on actual metric logic
+    failureLimit: 1
     provider:
       prometheus:
         address: http://prometheus-operator-kube-p-prometheus.monitoring.svc.cluster.local:9090
