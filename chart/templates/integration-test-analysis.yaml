@@ -5,10 +5,11 @@ metadata:
 spec:
   metrics:
   - name: integration-test-success-rate
-    successCondition: "result >= 0.95"  # Adjust the condition based on actual metric logic
+    successCondition: "result[0] >= 0.95"  # Use the first result element for condition
+    failureCondition: "result[0] < 0.95"   # Additional failure condition for clarity
     failureLimit: 1
     provider:
       prometheus:
         address: http://prometheus-operator-kube-p-prometheus.monitoring.svc.cluster.local:9090
         query: |
-          avg(integration_test_success_rate{app="color-grid"})
+          avg(integration_test_success_rate{app="color-grid"}) or vector(0)
