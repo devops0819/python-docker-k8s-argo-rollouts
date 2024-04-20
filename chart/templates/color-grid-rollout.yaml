@@ -15,6 +15,12 @@ spec:
   strategy:
     canary:
       steps:
+      - setWeight: 10
+      - pause:
+          duration: 1m
+      - analysis:
+          templates:
+          - templateName: integration-test-results
       - setWeight: 20
       - pause:
           duration: 1m
@@ -49,4 +55,3 @@ spec:
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         ports:
         - containerPort: 5000
-    
