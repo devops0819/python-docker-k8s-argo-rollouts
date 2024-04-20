@@ -6,12 +6,16 @@ on:
       - main
     paths:
       - 'chart/**'
+      - 'tests/**'
+      - 'Dockerfile'
+      - 'tests/Dockerfile.test'
 
 env:
-  IMAGE_REPO: devops0819/color-grid
+  APP_IMAGE_REPO: devops0819/color-grid
+  TEST_IMAGE_REPO: devops0819/python-test
 
 jobs:
-  build-and-push:
+  build-and-push-app:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -30,10 +34,32 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ env.IMAGE_REPO }}:run-${{ github.run_number }}
+          tags: ${{ env.APP_IMAGE_REPO }}:run-${{ github.run_number }}
+
+  build-and-push-test:
+    runs-on: ubuntu-latest
+    needs: build-and-push-app
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GH_PAT }}
+
+      - uses: docker/setup-buildx-action@v1
+
+      - uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - uses: docker/build-push-action@v2
+        with:
+          context: ./tests
+          file: ./tests/Dockerfile.test
+          push: true
+          tags: ${{ env.TEST_IMAGE_REPO }}:run-${{ github.run_number }}
 
   update-helm-values-and-create-pr:
-    needs: build-and-push
+    needs: build-and-push-test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -55,18 +81,19 @@ jobs:
             git checkout -b auto-update-branch
           fi
 
-      - name: Update values.yaml with new image tag
+      - name: Update values.yaml with new image tags
         run: |
-          sed -i "s/tag: .*/tag: 'run-${{ github.run_number }}'/" ./chart/values.yaml
+          sed -i "s/appImage.tag: .*/appImage.tag: 'run-${{ github.run_number }}'/" ./chart/values.yaml
+          sed -i "s/testImage.tag: .*/testImage.tag: 'run-${{ github.run_number }}'/" ./chart/values.yaml
           git add ./chart/values.yaml          
-          git commit -m "Update image tag to run-${{ github.run_number }}"
+          git commit -m "Update image tags to run-${{ github.run_number }}"
           git push --force-with-lease origin auto-update-branch
 
       - name: Create or update Pull Request
         uses: repo-sync/pull-request@v2
         with:
           github_token: ${{ secrets.GH_PAT }}
-          pr_title: "Auto-update image tag to run-${{ github.run_number }}"
-          pr_body: "This is an automated pull request to update the image tag."
+          pr_title: "Auto-update image tags to run-${{ github.run_number }}"
+          pr_body: "This is an automated pull request to update the image tags."
           destination_branch: "main"
           source_branch: "auto-update-branch"
