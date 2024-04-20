@@ -55,6 +55,10 @@ autoscaling:
   minReplicas: 1
   maxReplicas: 10
   targetCPUUtilizationPercentage: 80
+  
+canaryService:
+  host: color-grid-service  # Typically the same as the main service
+  port: "5000"
 
 volumes: []
 volumeMounts: []
