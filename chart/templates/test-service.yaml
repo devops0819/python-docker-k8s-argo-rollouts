@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: python-test-active
+  namespace: monitoring
+spec:
+  selector:
+    app: python-test
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: python-test-preview
+  namespace: monitoring
+spec:
+  selector:
+    app: python-test
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
