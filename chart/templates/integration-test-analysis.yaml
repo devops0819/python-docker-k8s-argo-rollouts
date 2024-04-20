@@ -11,4 +11,4 @@ spec:
       prometheus:
         address: http://prometheus-operator-kube-p-prometheus.monitoring.svc.cluster.local:9090
         query: |
-          integration_test_success_rate{app="color-grid"}
+          avg(integration_test_success_rate{app="color-grid"})
