@@ -23,3 +23,4 @@ spec:
           value: "{{ .Values.canaryService.port }}"
       restartPolicy: Never
   backoffLimit: 0
+  ttlSecondsAfterFinished: 100
