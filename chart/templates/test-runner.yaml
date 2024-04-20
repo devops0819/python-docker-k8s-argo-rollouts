@@ -1,5 +1,3 @@
-# helm/templates/test-runner.yaml
-
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -11,6 +9,9 @@ spec:
     metadata:
       labels:
         {{- include "color-grid.labels" . | nindent 8 }}
+      annotations:
+        # This annotation helps in changing the Pod template when configs change
+        checksum/test-image: {{ .Values.testImage.repository }}:{{ .Values.testImage.tag | sha256sum }}
     spec:
       containers:
       - name: test-runner
