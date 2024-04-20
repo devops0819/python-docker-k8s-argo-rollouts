@@ -7,7 +7,7 @@ metadata:
 spec:
   metrics:
   - name: integration-test-success-rate
-    successCondition: "result[0] > 0.9" # 90% tests should pass
+    successCondition: "result[0] > 0.9"  # 90% tests should pass
     provider:
       prometheus:
         address: http://prometheus-operator-kube-p-prometheus.monitoring.svc.cluster.local:9090
