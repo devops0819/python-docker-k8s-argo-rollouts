@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "color-grid.fullname" . }}-test-runner
+  name: {{ include "color-grid.fullname" . }}-test-runner-{{ .Release.Revision }}
   labels:
     {{- include "color-grid.labels" . | nindent 4 }}
 spec:
@@ -10,8 +10,8 @@ spec:
       labels:
         {{- include "color-grid.labels" . | nindent 8 }}
       annotations:
-        # This annotation helps in changing the Pod template when configs change
-        checksum/test-image: {{ .Values.testImage.repository }}:{{ .Values.testImage.tag | sha256sum }}
+        # This annotation ensures the Pod template is considered changed when the image changes
+        checksum/test-image: {{ printf "%s:%s" .Values.testImage.repository .Values.testImage.tag | sha256sum }}
     spec:
       containers:
       - name: test-runner
