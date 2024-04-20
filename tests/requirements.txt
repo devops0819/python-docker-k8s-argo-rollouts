@@ -1,5 +1,0 @@
-flask
-prometheus_flask_exporter
-requests
-pytest
-prometheus_client
