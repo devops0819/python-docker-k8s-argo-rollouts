@@ -4,7 +4,7 @@ metadata:
   name: {{ include "color-grid.fullname" . }}
   labels:
     {{- include "color-grid.labels" . | nindent 4 }}
-    release: prometheus-operator
+    release: prometheus-operator  # Ensures this is discovered by your Prometheus instance managed by Prometheus Operator
 spec:
   selector:
     matchLabels:
@@ -12,7 +12,8 @@ spec:
       app.kubernetes.io/instance: {{ .Release.Name }}
   namespaceSelector:
     matchNames:
-      - default  # Namespace where your service resides
+      - default  # Adjust this to match the namespace of your service if different
   endpoints:
-  - port: http  # This should match the port name in your service
+  - port: http  # Ensure this matches the port name defined in your service
     interval: 30s
+    path: /metrics  # Default metrics path for prometheus_flask_exporter
