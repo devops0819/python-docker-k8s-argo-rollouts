@@ -8,7 +8,7 @@ on:
       - 'chart/**'
       - 'tests/**'
       - 'Dockerfile'
-      - 'tests/Dockerfile.test'
+      - 'Dockerfile.test'
 
 env:
   APP_IMAGE_REPO: devops0819/color-grid
