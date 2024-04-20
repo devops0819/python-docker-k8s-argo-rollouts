@@ -12,7 +12,7 @@ spec:
       app.kubernetes.io/instance: {{ .Release.Name }}
   namespaceSelector:
     matchNames:
-      - default  # Ensure this is the namespace where your service resides
+      - default  # Namespace where your service resides
   endpoints:
   - port: http  # This should match the port name in your service
     interval: 30s
