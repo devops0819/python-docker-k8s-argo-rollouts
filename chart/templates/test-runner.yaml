@@ -10,12 +10,16 @@ spec:
       labels:
         {{- include "color-grid.labels" . | nindent 8 }}
       annotations:
-        # This annotation ensures the Pod template is considered changed when the image changes
         checksum/test-image: {{ printf "%s:%s" .Values.testImage.repository .Values.testImage.tag | sha256sum }}
     spec:
       containers:
       - name: test-runner
         image: "{{ .Values.testImage.repository }}:{{ .Values.testImage.tag }}"
         imagePullPolicy: Always
+        env:
+        - name: CANARY_SERVICE_HOST
+          value: "{{ .Values.canaryService.host }}"
+        - name: CANARY_SERVICE_PORT
+          value: "{{ .Values.canaryService.port }}"
       restartPolicy: Never
   backoffLimit: 0
