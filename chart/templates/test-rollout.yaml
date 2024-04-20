@@ -1,3 +1,4 @@
+# templates/rollout.yaml
 apiVersion: argoproj.io/v1alpha1
 kind: Rollout
 metadata:
@@ -15,7 +16,8 @@ spec:
     spec:
       containers:
       - name: python-tests
-        image: devops0819/python-test:latest
+        image: "{{ .Values.testImage.repository }}:{{ .Values.testImage.tag }}"
+        imagePullPolicy: "{{ .Values.testImage.pullPolicy }}"
         ports:
         - containerPort: 8000
   strategy:
