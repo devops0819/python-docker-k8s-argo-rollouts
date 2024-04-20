@@ -10,12 +10,12 @@ replicaCount: 5
 image:
   repository: devops0819/color-grid
   pullPolicy: Always
-  tag: "run-255"  # Updated image tag
+  tag: 'run-274'
 
 testImage:
   repository: devops0819/python-test
   pullPolicy: Always
-  tag: "run-255"  # Updated test image tag to match the main image
+  tag: 'run-274'
 
 imagePullSecrets: []
 serviceAccount:
